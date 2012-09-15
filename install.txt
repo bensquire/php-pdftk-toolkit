@@ -1,0 +1,10 @@
+The PDFTK PHP Library requires a valid installation of the PDFTK Binary, which can be found:
+
+	http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
+	
+Within the PFTTKPHPLibrary class, be sure to set the location of the binary(executable), the default 
+location looks like this:
+	
+	protected $_bin = "/usr/local/bin/pdftk";
+	
+See the example scripts for usage instructions.
