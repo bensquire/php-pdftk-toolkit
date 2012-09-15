@@ -33,6 +33,15 @@ Implemented Functionality:
  - Output the PDF to the browser or a file
 
 
+Installation:
+-------------
+ - Download and install the PDFTK binary http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
+ - Download this PHP library
+ - Update the location of the PDFTK binary within this library
+ - Try the examples!
+ - Provide Feedback :)
+
+
 Requirements:
 -------------
 This library requires no additional software beyond  a functional version of PHP
