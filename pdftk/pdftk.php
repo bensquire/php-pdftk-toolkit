@@ -293,14 +293,14 @@ class pdftk {
 
 		$total_inputs = count($this->aInputFiles);
 
-		//Assign each PDF a letter. (limited to 24 files atm)?
+		//Assign each PDF a multi-char handle (pdftk-1.45)
 		foreach ($this->aInputFiles AS $iKey => $oFile) {
 			if ($oFile->getData() != null) {
 				$aCommand[] = "-";
 				$this->sInputData = $iKey;
 			} else {
-				$letter = chr(65 + $iKey);
-				$aCommand[] = $letter . '=' . $oFile->getFilename();
+				$handle = chr(65 + floor($iKey/26)%26).chr(65 + $iKey%26);
+				$aCommand[] = $handle . "='" . $oFile->getFilename()."'";
 			}
 		}
 
@@ -324,8 +324,8 @@ class pdftk {
 		//Fetch command for each input file
 		if ($total_inputs > 1) {
 			foreach ($this->aInputFiles AS $iKey => $oFile) {
-				$letter = chr(65 + $iKey);
-				$aCommand[] = $letter . $oFile->_getCatCommand();
+				$handle = chr(65 + floor($iKey/26)%26).chr(65 + $iKey%26);
+				$aCommand[] = $handle . $oFile->_getCatCommand();
 			}
 		}
 
@@ -494,14 +494,14 @@ class pdftk {
 
 class pdftk_inputfile {
 
-	protected $aRotations = array(0 => 'N', 90 => 'E', 180 => 'S', 270 => 'W');
+	protected $aRotations = array(0 => 'north', 90 => 'east', 180 => 'south', 270 => 'west');
 	protected $sInputFilename = null;  //File to readin
 	protected $_data = null;   //Direct Stream data
 	protected $sPassword = null;  //Allow us to decode
 	protected $mStartPage = null;  //numeric or end
 	protected $mEndPage = null;  //numeric or end
 	protected $sAlternatePages = null;  //odd or even
-	protected $sRotation = null;  //N, E, S or W
+	protected $sRotation = null;  //north, east, south or west
 	protected $sOverride = null;  //Incase the string is paticully complex
 
 	function __construct($aParams = array()) {
