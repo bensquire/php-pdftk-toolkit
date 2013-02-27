@@ -9,8 +9,8 @@ used to merge and modify PDFs.
 
 Example Code:
 -------------
-	$pdftk = new pdftk();
-	$pdftk	->setInputFile(array("filename" => $path . 'example.pdf', 'start_page' => 2))
+	$oPdftk = new pdftk();
+	$oPdftk	->setInputFile(array("filename" => $path . 'example.pdf', 'start_page' => 2))
 			->setInputFile(array("filename" => $path . 'example2.pdf', 'rotation' => 90))
 			->setInputFile(array("filename" => $path . 'example2.pdf', 'password' => 'password', 'alternate' => 'odd'))
 			->setUserPassword("userpassword")
@@ -18,7 +18,7 @@ Example Code:
 			->setEncryptionLevel(40)
 			->setOutputFile('/tmp/generated.pdf');
 
-	$pdftk->_renderPdf();
+	$oPdftk->_renderPdf();
 
 
 Implemented Functionality:
@@ -45,5 +45,5 @@ Installation:
 Requirements:
 -------------
 This library requires no additional software beyond  a functional version of PHP
-5.2 (or greater) and if you wish to retrieve the Map image, a working Internet
-connection.
+5.2 (or greater) and version 1.45 of the pdftk binary (remember to update the binary
+location).

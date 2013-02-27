@@ -1,3 +1,5 @@
+Installation
+============
 The PDFTK PHP Library requires a valid installation of the PDFTK Binary, which can be found:
 
 	http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/

@@ -5,7 +5,7 @@
  * @license Apache 2.0
  *
  * @package PDFTK-PHP-Library
- * @version 0.1.0
+ * @version 0.1.1
  *
  * @abstract This class allows you to integrate with pdftk command line from within
  * your PHP application (An application for PDF: merging, encrypting, rotating, watermarking,
@@ -20,11 +20,12 @@
  *
  * @uses http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
  *
- * @see install.txt
+ * @see install.md
  *
  * @example examples/example1.php
  * @example examples/example2.php
  * @example examples/example3.php
+ * @example examples/example4.php
  */
 class pdftk {
 
@@ -42,15 +43,15 @@ class pdftk {
 	protected $sUserPassword = null;
 	protected $iEncryption = 128;
 	protected $aAccess = array(
-		"Printing" => false,
-		"DegradedPrinting" => false,
-		"ModifyContents" => false,
-		"Assembly" => false,
-		"CopyContents" => false,
-		"ScreenReaders" => false,
-		"ModifyAnnotations" => false,
-		"FillIn" => false,
-		"AllFeatures" => false
+		'Printing' => false,
+		'DegradedPrinting' => false,
+		'ModifyContents' => false,
+		'Assembly' => false,
+		'CopyContents' => false,
+		'ScreenReaders' => false,
+		'ModifyAnnotations' => false,
+		'FillIn' => false,
+		'AllFeatures' => false
 	);
 	protected $sInputData = null; //We'll use this to store the key for the input file.
 
@@ -90,10 +91,9 @@ class pdftk {
 	public function setEncryptionLevel($iEncryptionLevel = 128) {
 		if ((int) $iEncryptionLevel != 40 && (int) $iEncryptionLevel != 128) {
 			throw new Exception('Encryption should either be 40 or 128 (bit)');
-		} else {
-			$this->iEncryption = (int) $iEncryptionLevel;
-		}
-
+        }
+		
+        $this->iEncryption = (int) $iEncryptionLevel;
 		return $this;
 	}
 
@@ -114,7 +114,6 @@ class pdftk {
 	 */
 	public function setUserPassword($sPassword = null) {
 		$this->sUserPassword = $sPassword;
-
 		return $this;
 	}
 
@@ -137,7 +136,6 @@ class pdftk {
 	 */
 	public function setOwnerPassword($sPassword = null) {
 		$this->sOwnerPassword = $sPassword;
-
 		return $this;
 	}
 
@@ -161,10 +159,9 @@ class pdftk {
 	public function setVerboseMode($bVerbose = false) {
 		if (!is_bool($bVerbose)) {
 			throw new Exception('Verbose mode should be either true or false');
-		} else {
-			$this->bVerbose = (bool) $bVerbose;
-		}
-
+        }
+		
+        $this->bVerbose = (bool) $bVerbose;
 		return $this;
 	}
 
@@ -188,10 +185,9 @@ class pdftk {
 	public function setAskMode($bAskMode = false) {
 		if (!is_bool($bAskMode)) {
 			throw new Exception('Ask Mode should be either true or false');
-		} else {
-			$this->bAskmode = (bool) $bAskMode;
-		}
-
+        }
+		
+        $this->bAskmode = (bool) $bAskMode;
 		return $this;
 	}
 
@@ -277,9 +273,9 @@ class pdftk {
 			return $this->aInputFiles[$mInputFile];
 		} elseif (isset($mInputFile) && !isset($this->aInputFiles[$mInputFile])) {
 			return false;
-		} else {
-			return $this->aInputFiles;
 		}
+        
+        return $this->aInputFiles;
 	}
 
 	/**
@@ -308,7 +304,8 @@ class pdftk {
 		//input_pw A=foopass
 		$aPasswords = array();
 		foreach ($this->aInputFiles AS $iKey => $oFile) {
-			$letter = chr(65 + $iKey);
+			//$letter = chr(65 + $iKey);
+            $letter = chr(65 + floor($iKey/26)%26).chr(65 + $iKey%26);
 			if ($oFile->getPassword() !== null) {
 				$aPasswords[] = $letter . '=' . $oFile->getPassword();
 			}
@@ -342,7 +339,6 @@ class pdftk {
 
 			//Set Encryption Level
 			$aCommand[] = 'encrypt_' . $this->iEncryption . 'bit';
-
 
 			//TODO: Sets permissions
 			//pdftk mydoc.pdf output mydoc.128.pdf owner_pw foo user_pw baz allow printing
@@ -387,31 +383,39 @@ class pdftk {
 		header('Content-Disposition: attachment; filename="' . $filename . '"');
 		echo $pdfData;
 
-		if ($bReturn === true) {
+		if ($bReturn) {
 			return $pdfData;
 		}
 	}
 
 	/**
-	 * Render document as inline resource
-	 * e.g: $foo->inlineOutput();
-	 *
-	 * @return void
-	 */
-	public function inlineOutput($bReturn = false) {
-		$filename = $this->sOutputFilename;
+     * Render document as inline resource
+	 * e.g: $foo->inlineOutput(); 
+     * 
+     * @param string $sFilename The filename if your were to save the pdf
+     * @param boolean $bReturn  Whether we should return the pdf in string format as well
+     * @return type
+     */
+	public function inlineOutput($sFilename = 'output.pdf', $bReturn = false) {
+        
+        if (strlen($sFilename) === 0 || !is_string($sFilename)) {
+            throw new Exception('Invalid output filename');
+        }
+        
 		$this->sOutputFilename = null;
+        $sFilename = preg_replace('/[^a-z0-9_\-.]+/i', '_', str_replace('.pdf', '', strtolower($sFilename))) . '.pdf';
 
 		$pdfData = $this->_renderPdf();
-		$respObj->setHeader('Cache-Control', 'public, must-revalidate, max-age=0', true);
-		$respObj->setHeader('Pragma', 'public', true);
-		$respObj->setHeader('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT', true);
-		$respObj->setHeader('Last-Modified', gmdate('D, d m Y H:i:s') . " GMT", true);
-		$respObj->setHeader('Content-Length', strlen($pdfData), true);
-		$respObj->setHeader('Content-Disposition', 'inline; filename="' . preg_replace('/[^a-z0-9_\-.]+/i', '_', strtolower($filename)) . '.pdf' . '";', true);
+
+        header('Content-type: application/pdf');
+        header('Cache-Control: public, must-revalidate, max-age=0');
+        header('Content-Disposition: inline; filename="' . $sFilename . '"');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Length: ' . strlen($pdfData));
+        header('Accept-Ranges: bytes');
 		echo $pdfData;
 
-		if ($bReturn === true) {
+		if ($bReturn) {
 			return $pdfData;
 		}
 	}
@@ -425,7 +429,6 @@ class pdftk {
 	public function _renderPdf() {
 		$sData = ((!is_null($this->sInputData) ? $this->aInputFiles[$this->sInputData]->getData() : null));
 		$sContent = $this->_exec($this->_getCommand(), $sData);
-
 		if (strlen($sContent['stderr']) > 0) {
 			throw new Exception('System error: ' . $sContent['stderr']);
 		}
@@ -463,20 +466,20 @@ class pdftk {
 
 		$proc = proc_open($sCommand, $aDescriptorSpec, $aPipes);
 
-		if (is_resource($proc)) {
-			fwrite($aPipes[0], $sInput);
-			fclose($aPipes[0]);
-
-			$aResult['stdout'] = stream_get_contents($aPipes[1]);
-			fclose($aPipes[1]);
-
-			$aResult['stderr'] = stream_get_contents($aPipes[2]);
-			fclose($aPipes[2]);
-
-			$aResult['return'] = proc_close($proc);
-		} else {
+		if (!is_resource($proc)) {
 			throw new Exception('Unable to open command line resource');
-		}
+        }
+        
+        fwrite($aPipes[0], $sInput);
+        fclose($aPipes[0]);
+
+        $aResult['stdout'] = stream_get_contents($aPipes[1]);
+        fclose($aPipes[1]);
+
+        $aResult['stderr'] = stream_get_contents($aPipes[2]);
+        fclose($aPipes[2]);
+
+        $aResult['return'] = proc_close($proc);
 
 		return $aResult;
 	}
@@ -541,12 +544,12 @@ class pdftk_inputfile {
 	 * @return bool
 	 */
 	public function setFilename($sFilename) {
-		if (file_exists($sFilename)) {
-			$this->sInputFilename = $sFilename;
-			return true;
-		} else {
+		if (!file_exists($sFilename)) {
 			throw new Exception('File Doesn\'t exist: ' . $sFilename);
-		}
+        }
+        
+        $this->sInputFilename = $sFilename;
+        return true;
 	}
 
 	/**
@@ -680,5 +683,4 @@ class pdftk_inputfile {
 
 		return implode('', $aCommand);
 	}
-
 }
