@@ -427,8 +427,13 @@ class pdftk {
 	 * @return string
 	 */
 	public function _renderPdf() {
+		
+		$sCommand = $this->_getCommand();
+		
 		$sData = ((!is_null($this->sInputData) ? $this->aInputFiles[$this->sInputData]->getData() : null));
-		$sContent = $this->_exec($this->_getCommand(), $sData);
+		
+		$sContent = $this->_exec($sCommand, $sData);
+		
 		if (strlen($sContent['stderr']) > 0) {
 			throw new Exception('System error: ' . $sContent['stderr']);
 		}
