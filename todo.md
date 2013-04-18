@@ -1,3 +1,3 @@
-- [] Remove StdIn functionality, extend so fed in data is saved to disc and then manipulated
-- [] Add all other functionality the library is capable of (Not just concatenate)
-- [] Refine examples
+- Remove StdIn functionality, extend so fed in data is saved to disc and then manipulated
+- Add all other functionality the library is capable of (Not just concatenate)
+- Refine examples
