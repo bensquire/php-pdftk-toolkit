@@ -1,2 +1,4 @@
 nbproject/
 .svn
+.idea
+*.iml
