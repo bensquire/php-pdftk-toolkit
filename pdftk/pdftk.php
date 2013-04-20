@@ -30,7 +30,7 @@
 class pdftk {
 
 	//StartConfiguration
-	protected $sBin = '/usr/local/bin/pdftk';
+	public $sBin = '/usr/local/bin/pdftk';
 	//End Configuration
 
 
@@ -105,6 +105,16 @@ class pdftk {
 	 */
 	public function getEncryptionLevel() {
 		return $this->iEncryption;
+	}
+
+	/**
+	 * Returns the version of PDFTK
+	 * e.g. $sPdftkVersion = $foo->getPdftkVersion();
+	 *
+	 * @return string
+	 */
+	public function getPdftkVersion() {
+		return $this->_exec($this->sBin . ' --version | grep ^pdftk | cut -d " " -f2');
 	}
 
 	/**
