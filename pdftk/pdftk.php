@@ -27,6 +27,7 @@
  * @example examples/example3.php
  * @example examples/example4.php
  */
+define("PHP_PDFTK_TOOLKIT_VERSION",     "0.1.1");
 class pdftk {
 
 	//StartConfiguration
