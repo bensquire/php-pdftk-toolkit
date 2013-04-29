@@ -106,6 +106,16 @@ class pdftk {
 	public function getEncryptionLevel() {
 		return $this->iEncryption;
 	}
+	
+	/**
+	 * Returns the version of PDFTK
+	 * e.g. $sPdftkVersion = $foo->getPdftkVersion();
+	 *
+	 * @return string
+	 */
+	public function getPdftkVersion() {
+		return $this->_exec($this->sBin . ' --version | grep ^pdftk | cut -d " " -f2');
+	}
 
 	/**
 	 * Sets the users password for the ouput file
@@ -295,7 +305,11 @@ class pdftk {
 				$aCommand[] = "-";
 				$this->sInputData = $iKey;
 			} else {
-				$handle = chr(65 + floor($iKey/26)%26).chr(65 + $iKey%26);
+				if ($this->getPdftkVersion() >= 1.45) {
+					$handle = chr(65 + floor($iKey/26)%26).chr(65 + $iKey%26);
+				} else {
+					$handle = chr(65 + $iKey);
+				}
 				$aCommand[] = $handle . "='" . $oFile->getFilename()."'";
 			}
 		}
@@ -304,10 +318,13 @@ class pdftk {
 		//input_pw A=foopass
 		$aPasswords = array();
 		foreach ($this->aInputFiles AS $iKey => $oFile) {
-			//$letter = chr(65 + $iKey);
-            $letter = chr(65 + floor($iKey/26)%26).chr(65 + $iKey%26);
+			if ($this->getPdftkVersion() >= 1.45) {
+				$handle = chr(65 + floor($iKey/26)%26).chr(65 + $iKey%26);
+			} else {
+				$handle = chr(65 + $iKey);
+			}
 			if ($oFile->getPassword() !== null) {
-				$aPasswords[] = $letter . '=' . $oFile->getPassword();
+				$aPasswords[] = $handle . '=' . $oFile->getPassword();
 			}
 		}
 
@@ -321,7 +338,11 @@ class pdftk {
 		//Fetch command for each input file
 		if ($total_inputs > 1) {
 			foreach ($this->aInputFiles AS $iKey => $oFile) {
-				$handle = chr(65 + floor($iKey/26)%26).chr(65 + $iKey%26);
+				if ($this->getPdftkVersion() >= 1.45) {
+					$handle = chr(65 + floor($iKey/26)%26).chr(65 + $iKey%26);
+				} else {
+					$handle = chr(65 + $iKey);
+				}
 				$aCommand[] = $handle . $oFile->_getCatCommand();
 			}
 		}
