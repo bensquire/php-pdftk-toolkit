@@ -29,6 +29,7 @@
  */
 class pdftk
 {
+    const VERSION = '0.1.1';
 
     //StartConfiguration
     protected $sBin = '/usr/local/bin/pdftk';
