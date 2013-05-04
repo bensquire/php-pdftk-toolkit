@@ -5,7 +5,7 @@
  * @license Apache 2.0
  *
  * @package PDFTK-PHP-Library
- * @version 0.1.1
+ * @version 0.1.2
  *
  * @abstract This class allows you to integrate with PDFTK command line from within
  * your PHP application (An application for PDF: merging, encrypting, rotating, watermarking,
@@ -26,10 +26,12 @@
  * @example examples/example2.php
  * @example examples/example3.php
  * @example examples/example4.php
+ * @example examples/example5.php
+ * @example examples/example6.php
  */
 class pdftk
 {
-    const VERSION = '0.1.1';
+    const VERSION = '0.1.2';
 
     //StartConfiguration
     protected $sBin = '/usr/local/bin/pdftk';
@@ -276,7 +278,7 @@ class pdftk
      */
     public function getCompress()
     {
-        return (bool) $this->bCompress;
+        return (bool)$this->bCompress;
     }
 
     /**
@@ -337,7 +339,7 @@ class pdftk
                 } else {
                     $handle = chr(65 + $iKey);
                 }
-                $aCommand[] = $handle . "='" . $oFile->getFilename() . "'";
+                $aCommand[] = $handle . '=' . escapeshellarg($oFile->getFilename());
             }
         }
 
@@ -480,12 +482,9 @@ class pdftk
      */
     public function _renderPdf()
     {
-
-        $sCommand = $this->_getCommand();
-
         $sData = ((!is_null($this->sInputData) ? $this->aInputFiles[$this->sInputData]->getData() : null));
 
-        $sContent = $this->_exec($sCommand, $sData);
+        $sContent = $this->_exec($this->_getCommand(), $sData);
 
         if (strlen($sContent['stderr']) > 0) {
             throw new Exception('System error: ' . $sContent['stderr']);

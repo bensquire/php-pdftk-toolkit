@@ -2,8 +2,8 @@
 include('../pdftk/pdftk.php');
 $sPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'pdfs' . DIRECTORY_SEPARATOR;
 
-$oPdftk = new pdftk();
-$oPdftk ->setInputFile(array("filename" => $sPath . 'example.pdf', 'start_page' => 1, "end_page" => 2))
+$oPDFTk = new pdftk();
+$oPDFTk ->setInputFile(array("filename" => $sPath . 'example.pdf', 'start_page' => 1, "end_page" => 2))
         ->setInputFile(array("filename" => $sPath . 'example.pdf', 'rotation' => 90))
         ->setUserPassword("userpassword")
         ->setOwnerPassword("ownerpassword")
