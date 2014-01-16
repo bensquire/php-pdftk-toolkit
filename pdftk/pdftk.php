@@ -16,7 +16,7 @@ namespace pdftk;
  * This library is in no way connected with the author of PDFTK.
  *
  * To be able to use this library a working version of the binary must be installed
- * and its path configured below.
+ * and its path configured in config.php.
  *
  * @uses http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
  *
@@ -29,14 +29,11 @@ namespace pdftk;
  * @example examples/example5.php
  * @example examples/example6.php
  */
+include 'config.php'; 
+
 class pdftk
 {
     const VERSION = '0.1.2';
-
-    //StartConfiguration
-    protected $sBin = '/usr/local/bin/pdftk';
-    //End Configuration
-
 
     protected $aInputFiles = null;
     protected $sOutputFilename = null;
@@ -123,7 +120,7 @@ class pdftk
      */
     public function getPdftkVersion()
     {
-        return $this->_exec($this->sBin . ' --version | grep ^pdftk | cut -d " " -f2');
+        return $this->_exec(config::$sBin . ' --version | grep ^pdftk | cut -d " " -f2');
     }
 
     /**
@@ -324,7 +321,7 @@ class pdftk
     public function _getCommand()
     {
         $aCommand = array();
-        $aCommand[] = $this->sBin;
+        $aCommand[] = config::$sBin;
 
         $total_inputs = count($this->aInputFiles);
 
