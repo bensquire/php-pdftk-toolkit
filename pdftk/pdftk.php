@@ -1,5 +1,5 @@
 <?php
-
+namespace pdftk;
 /**
  * @author Ben Squire <b.squire@gmail.com>
  * @license Apache 2.0
@@ -97,7 +97,7 @@ class pdftk
     public function setEncryptionLevel($iEncryptionLevel = 128)
     {
         if ((int)$iEncryptionLevel != 40 && (int)$iEncryptionLevel != 128) {
-            throw new Exception('Encryption should either be 40 or 128 (bit)');
+            throw new \Exception('Encryption should either be 40 or 128 (bit)');
         }
 
         $this->iEncryption = (int)$iEncryptionLevel;
@@ -186,7 +186,7 @@ class pdftk
     public function setVerboseMode($bVerbose = false)
     {
         if (!is_bool($bVerbose)) {
-            throw new Exception('Verbose mode should be either true or false');
+            throw new \Exception('Verbose mode should be either true or false');
         }
 
         $this->bVerbose = (bool)$bVerbose;
@@ -215,7 +215,7 @@ class pdftk
     public function setAskMode($bAskMode = false)
     {
         if (!is_bool($bAskMode)) {
-            throw new Exception('Ask Mode should be either true or false');
+            throw new \Exception('Ask Mode should be either true or false');
         }
 
         $this->bAskMode = (bool)$bAskMode;
@@ -452,7 +452,7 @@ class pdftk
     {
 
         if (strlen($sFilename) === 0 || !is_string($sFilename)) {
-            throw new Exception('Invalid output filename');
+            throw new \Exception('Invalid output filename');
         }
 
         $this->sOutputFilename = null;
@@ -487,12 +487,12 @@ class pdftk
         $sContent = $this->_exec($this->_getCommand(), $sData);
 
         if (strlen($sContent['stderr']) > 0) {
-            throw new Exception('System error: ' . $sContent['stderr']);
+            throw new \Exception('System error: ' . $sContent['stderr']);
         }
 
         //Error only if we expecting something from stdout and nothing was returned
         if (is_null($this->sOutputFilename) && mb_strlen($sContent['stdout'], 'utf-8') === 0) {
-            throw new Exception(
+            throw new \Exception(
                 'PDF-TK did not return any data: ' .
                 $this->_getCommand() .
                 ' ' .
@@ -501,7 +501,7 @@ class pdftk
         }
 
         if ((int)$sContent['return'] > 1) {
-            throw new Exception('Shell error, return code: ' . (int)$sContent['return']);
+            throw new \Exception('Shell error, return code: ' . (int)$sContent['return']);
         }
 
         return $sContent['stdout'];
@@ -531,7 +531,7 @@ class pdftk
         $proc = proc_open($sCommand, $aDescriptorSpec, $aPipes);
 
         if (!is_resource($proc)) {
-            throw new Exception('Unable to open command line resource');
+            throw new \Exception('Unable to open command line resource');
         }
 
         fwrite($aPipes[0], $sInput);
@@ -614,7 +614,7 @@ class pdftk_inputfile
     public function setFilename($sFilename)
     {
         if (!file_exists($sFilename)) {
-            throw new Exception('File Doesn\'t exist: ' . $sFilename);
+            throw new \Exception('File Doesn\'t exist: ' . $sFilename);
         }
 
         $this->sInputFilename = $sFilename;
