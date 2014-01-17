@@ -376,7 +376,7 @@ class pdftk
         //Output file params
         $aCommand[] = 'output';
         if (!empty($this->sOutputFilename)) {
-            $aCommand[] = $this->sOutputFilename;
+            $aCommand[] = escapeshellarg($this->sOutputFilename);
         } else {
             $aCommand[] = '-';
         }
