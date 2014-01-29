@@ -1,11 +1,12 @@
 <?php
-namespace pdftk;
+namespace Pdftk;
+use Pdftk\File\Input;
 /**
  * @author Ben Squire <b.squire@gmail.com>
  * @license Apache 2.0
  *
  * @package PDFTK-PHP-Library
- * @version 0.1.2
+ * @version 1.1
  *
  * @abstract This class allows you to integrate with PDFTK command line from within
  * your PHP application (An application for PDF: merging, encrypting, rotating, watermarking,
@@ -29,12 +30,12 @@ namespace pdftk;
  * @example examples/example5.php
  * @example examples/example6.php
  */
-include 'config.php'; 
 
-class pdftk
+class Pdftk
 {
-    const VERSION = '0.1.2';
+    const VERSION = '1.1';
 
+    protected $sBinary = '/usr/local/bin/pdftk';
     protected $aInputFiles = null;
     protected $sOutputFilename = null;
     protected $bVerbose = false;
@@ -84,11 +85,29 @@ class pdftk
     }
 
     /**
+     * Sets the location of the PDFTK executable
+     *
+     * @param $sBinary
+     * @return $this
+     * @throws \Exception
+     */
+    public function setBinary($sBinary)
+    {
+        if (!file_exists($sBinary))
+        {
+            throw new \Exception('PDFTK path is incorrect');
+        }
+
+        $this->sBinary = $sBinary;
+        return $this;
+    }
+
+    /**
      * Sets the level of encryption to be used (if owner/user password is specified).
      * e.g. $foo->setEncryptionLevel(128);
      *
      * @param int $iEncryptionLevel
-     * @throws Exception
+     * @throws \Exception
      * @return $this
      */
     public function setEncryptionLevel($iEncryptionLevel = 128)
@@ -120,7 +139,7 @@ class pdftk
      */
     public function getPdftkVersion()
     {
-        return $this->_exec(config::$sBin . ' --version | grep ^pdftk | cut -d " " -f2');
+        return $this->_exec($this->sBinary . ' --version | grep ^pdftk | cut -d " " -f2');
     }
 
     /**
@@ -176,7 +195,7 @@ class pdftk
      * @example    $foo->setVerboseMode(false);
      *
      * @param bool $bVerbose
-     * @throws Exception
+     * @throws \Exception
      *
      * @return $this
      */
@@ -206,7 +225,7 @@ class pdftk
      * @example    $foo->setAskMode(false);
      *
      * @param bool $bAskMode
-     * @throws Exception
+     * @throws \Exception
      * @return $this
      */
     public function setAskMode($bAskMode = false)
@@ -287,11 +306,12 @@ class pdftk
      */
     public function setInputFile($aParams = array())
     {
-        if ($aParams instanceof pdftk_inputfile) {
+        if ($aParams instanceof Input) {
             $this->aInputFiles[] = $aParams;
         } else {
-            $this->aInputFiles[] = new pdftk_inputfile($aParams);
+            $this->aInputFiles[] = new Input($aParams);
         }
+
         return $this;
     }
 
@@ -306,7 +326,9 @@ class pdftk
     {
         if (isset($mInputFile) && isset($this->aInputFiles[$mInputFile])) {
             return $this->aInputFiles[$mInputFile];
-        } elseif (isset($mInputFile) && !isset($this->aInputFiles[$mInputFile])) {
+        }
+
+        if (isset($mInputFile) && !isset($this->aInputFiles[$mInputFile])) {
             return false;
         }
 
@@ -321,7 +343,7 @@ class pdftk
     public function _getCommand()
     {
         $aCommand = array();
-        $aCommand[] = config::$sBin;
+        $aCommand[] = $this->sBinary;
 
         $total_inputs = count($this->aInputFiles);
 
@@ -442,7 +464,7 @@ class pdftk
      *
      * @param string $sFilename The filename if your were to save the pdf
      * @param boolean $bReturn  Whether we should return the pdf in string format as well
-     * @throws Exception
+     * @throws \Exception
      * @return type
      */
     public function inlineOutput($sFilename = 'output.pdf', $bReturn = false)
@@ -474,7 +496,7 @@ class pdftk
      * Builds the final PDF
      * @example    $foo->_renderPdf();
      *
-     * @throws Exception
+     * @throws \Exception
      * @return string
      */
     public function _renderPdf()
@@ -509,7 +531,8 @@ class pdftk
      *
      * @param string $sCommand Command to execute
      * @param string $sInput Other input (not arguments)??
-     * @throws Exception
+     * @throws \Exception
+     *
      * @return array
      */
     protected function _exec($sCommand, $sInput = null)
@@ -553,210 +576,5 @@ class pdftk
     public function __toString()
     {
         return $this->_getCommand();
-    }
-
-}
-
-class pdftk_inputfile
-{
-
-    protected $aRotations = array(0 => 'north', 90 => 'east', 180 => 'south', 270 => 'west');
-    protected $sInputFilename = null; //File to readin
-    protected $_data = null; //Direct Stream data
-    protected $sPassword = null; //Allow us to decode
-    protected $mStartPage = null; //numeric or end
-    protected $mEndPage = null; //numeric or end
-    protected $sAlternatePages = null; //odd or even
-    protected $sRotation = null; //north, east, south or west
-    protected $sOverride = null; //Incase the string is paticully complex
-
-    public function __construct($aParams = array())
-    {
-        if (isset($aParams['filename'])) {
-            $this->setFilename($aParams['filename']);
-        }
-
-        if (isset($aParams['data'])) {
-            $this->setData($aParams['data']);
-        }
-
-        if (isset($aParams['password'])) {
-            $this->setPassword($aParams['password']);
-        }
-
-        if (isset($aParams['start_page'])) {
-            $this->setStartPage($aParams['start_page']);
-        }
-
-        if (isset($aParams['end_page'])) {
-            $this->setEndPage($aParams['end_page']);
-        }
-
-        if (isset($aParams['alternate'])) {
-            $this->setAlternate($aParams['alternate']);
-        }
-
-        if (isset($aParams['rotation'])) {
-            $this->setRotation($aParams['rotation']);
-        }
-    }
-
-    /**
-     * Set the filename to be read from
-     *
-     * @param string $sFilename
-     * @throws Exception
-     * @return bool
-     */
-    public function setFilename($sFilename)
-    {
-        if (!file_exists($sFilename)) {
-            throw new \Exception('File Doesn\'t exist: ' . $sFilename);
-        }
-
-        $this->sInputFilename = $sFilename;
-        return true;
-    }
-
-    /**
-     * Return the filename of the input file
-     * @example    $foo->getFilename();
-     *
-     * @return string
-     */
-    public function getFilename()
-    {
-        return $this->sInputFilename;
-    }
-
-    /**
-     * Pass the input data in
-     *
-     * @param string $sData
-     */
-    public function setData($sData = null)
-    {
-        $this->_data = $sData;
-    }
-
-    /**
-     * Returns the 'string' version of the file.
-     *
-     * @return <type>
-     */
-    public function getData()
-    {
-        return $this->_data;
-    }
-
-    /**
-     * Set the files read password
-     *
-     * @param string $sPassword
-     */
-    public function setPassword($sPassword = null)
-    {
-        $this->sPassword = $sPassword;
-    }
-
-    /**
-     * Returns the read password set for this input file
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->sPassword;
-    }
-
-    /**
-     * Set the start page to read from
-     * @example $foo->setStartPage('end');
-     *
-     * @param mixed $mStartPage
-     */
-    public function setStartPage($mStartPage)
-    {
-        $this->mStartPage = $mStartPage;
-    }
-
-    /**
-     * Set the end page to read up to
-     * @example $foo->setEndPage(9);
-     *
-     * @param int $iEndPage
-     */
-    public function setEndPage($iEndPage)
-    {
-        $this->mEndPage = $iEndPage;
-    }
-
-    /**
-     * Allows the user to pass in a replacement command line string
-     * @example $foo->setOverride('5-25oddW');
-     *
-     * @param string $sOverride
-     */
-    public function setOverride($sOverride)
-    {
-        $this->sOverride = $sOverride;
-    }
-
-    /**
-     * Sets the rotation of this document
-     * @example $foo->setRotation(90);
-     *
-     * @param int $iRotation
-     */
-    public function setRotation($iRotation)
-    {
-        $this->sRotation = (int)$iRotation;
-    }
-
-    /**
-     * Sets the rotation of the input file
-     * @example $foo->setAlternate('even');
-     *
-     * @params string $sAlternate
-     */
-    public function setAlternate($sAlternate = null)
-    {
-        $this->sAlternatePages = $sAlternate;
-    }
-
-    /**
-     * Returns command to be executed
-     * @example $foo->_getCatCommand();
-     *
-     * @return string
-     */
-    public function _getCatCommand()
-    {
-
-        if ($this->sOverride != null) {
-            return $this->sOverride;
-        }
-
-        $aCommand = array();
-
-        //Page Numbers and Qualifiers
-        if ($this->mStartPage !== null) {
-            $aCommand[] = $this->mStartPage;
-        }
-
-        if ($this->mEndPage !== null) {
-            $aCommand[] = '-' . $this->mEndPage;
-        }
-
-        if ($this->sAlternatePages !== null) {
-            $aCommand[] = $this->sAlternatePages;
-        }
-
-        //File rotation
-        if ($this->sRotation !== null) {
-            $aCommand[] = $this->aRotations[$this->sRotation];
-        }
-
-        return implode('', $aCommand);
     }
 }

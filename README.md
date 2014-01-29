@@ -6,12 +6,14 @@ A PHP library to that creates an interface for the PDFTK (PDF-Toolkit) command l
 Using simple OO methods, this project will build and run the typical command line parameters
 used to merge and modify PDFs.
 
-Note: It took me 7 months to realise the repository name is spelt wrong (doh!)
-
 
 Example Code:
 -------------
-	$oPdftk = new pdftk();
+    //Initiate autoloader
+
+    use Pdftk\Pdftk;
+
+	$oPdftk = new Pdftk();
 	$oPdftk	->setInputFile(array("filename" => $path . 'example.pdf', 'start_page' => 2))
 			->setInputFile(array("filename" => $path . 'example2.pdf', 'rotation' => 90))
 			->setInputFile(array("filename" => $path . 'example2.pdf', 'password' => 'password', 'alternate' => 'odd'))
@@ -47,5 +49,5 @@ Installation:
 Requirements:
 -------------
 This library requires no additional software beyond  a functional version of PHP
-5.2 (or greater) and version 1.45 of the pdftk binary (remember to update the binary
-location).
+5.3 (or greater) and version 1.45 of the pdftk binary (remember to update the binary
+location if its not in /usr/local/bin).
