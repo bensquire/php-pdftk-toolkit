@@ -30,7 +30,6 @@ use Pdftk\File\Input;
  * @example examples/example5.php
  * @example examples/example6.php
  */
-
 class Pdftk
 {
     const VERSION = '1.1';

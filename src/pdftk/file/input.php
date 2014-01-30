@@ -5,7 +5,7 @@ class Input
 {
     protected $aRotations = array(0 => 'north', 90 => 'east', 180 => 'south', 270 => 'west');
     protected $sInputFilename = null; //File to read in
-    protected $_data = null; //Direct Stream data
+    protected $streamData = null; //Direct Stream data
     protected $sPassword = null; //Allow us to decode
     protected $mStartPage = null; //numeric or end
     protected $mEndPage = null; //numeric or end
@@ -20,7 +20,7 @@ class Input
         }
 
         if (isset($aParams['data'])) {
-            $this->setData($aParams['data']);
+            $this->setStreamData($aParams['data']);
         }
 
         if (isset($aParams['password'])) {
@@ -78,9 +78,9 @@ class Input
      * @param string $sData
      * @return $this
      */
-    public function setData($sData = null)
+    public function setStreamData($sData = null)
     {
-        $this->_data = $sData;
+        $this->streamData = $sData;
         return $this;
     }
 
@@ -89,9 +89,9 @@ class Input
      *
      * @return string
      */
-    public function getData()
+    public function getStreamData()
     {
-        return $this->_data;
+        return $this->streamData;
     }
 
     /**

@@ -1,5 +1,5 @@
 nbproject/
-.svn
-.idea
-*.iml
+.idea/
 vendor/
+.svn
+*.iml
