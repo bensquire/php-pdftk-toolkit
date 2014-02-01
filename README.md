@@ -3,8 +3,8 @@ php-pdftk-toolkit
 A PHP library to that creates an interface for the PDFTK (PDF-Toolkit) command line interface
 (http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/).
 
-Using simple OO methods, this project will build and run the typical command line parameters
-used to merge and modify PDFs.
+A simple PSR-0 compliant library, this project will build and run the typical command line  parameters used to merge
+and modify PDFs.
 
 
 Example Code:

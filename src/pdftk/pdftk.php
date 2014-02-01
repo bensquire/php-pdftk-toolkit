@@ -111,7 +111,7 @@ class Pdftk
      */
     public function setEncryptionLevel($iEncryptionLevel = 128)
     {
-        if ((int)$iEncryptionLevel != 40 && (int)$iEncryptionLevel != 128) {
+        if ((int)$iEncryptionLevel !== 40 && (int)$iEncryptionLevel !== 128) {
             throw new \Exception('Encryption should either be 40 or 128 (bit)');
         }
 
@@ -315,22 +315,13 @@ class Pdftk
     }
 
     /**
-     * Returns part of or all of the $this->_input_file array (when possible)
+     * Returns all of the $this->_input_file array
      * e.g. $temp = $foo->getInputFile();
      *
-     * @param <type> $mInputFile
-     * @return mixed pdftk_inputfile|bool|array
+     * @return mixed array
      */
-    public function getInputFile($mInputFile = null)
+    public function getInputFile()
     {
-        if (isset($mInputFile) && isset($this->aInputFiles[$mInputFile])) {
-            return $this->aInputFiles[$mInputFile];
-        }
-
-        if (isset($mInputFile) && !isset($this->aInputFiles[$mInputFile])) {
-            return false;
-        }
-
         return $this->aInputFiles;
     }
 
@@ -348,7 +339,7 @@ class Pdftk
 
         //Assign each PDF a multi-char handle (pdftk-1.45)
         foreach ($this->aInputFiles as $iKey => $oFile) {
-            if ($oFile->getData() != null) {
+            if ($oFile->getData() !== null) {
                 $aCommand[] = "-";
                 $this->sInputData = $iKey;
             } else {
@@ -403,7 +394,7 @@ class Pdftk
         }
 
         //Check for PDF password...
-        if ($this->sOwnerPassword != null || $this->sUserPassword != null) {
+        if ($this->sOwnerPassword !== null || $this->sUserPassword !== null) {
 
             //Set Encryption Level
             $aCommand[] = 'encrypt_' . $this->iEncryption . 'bit';
@@ -413,18 +404,18 @@ class Pdftk
             //Printing, DegradedPrinting, ModifyContents, Assembly, CopyContents,
             //ScreenReaders, ModifyAnnotations, FillIn, AllFeatures
             //Setup owner password
-            if ($this->sOwnerPassword != null) {
+            if ($this->sOwnerPassword !== null) {
                 $aCommand[] = 'owner_pw ' . $this->sOwnerPassword;
             }
 
             //Setup owner password
-            if ($this->sUserPassword != null) {
+            if ($this->sUserPassword !== null) {
                 $aCommand[] = 'user_pw ' . $this->sUserPassword;
             }
         }
 
         //Compress
-        $aCommand[] = (($this->bCompress == true) ? 'compress' : 'uncompress');
+        $aCommand[] = (($this->bCompress === true) ? 'compress' : 'uncompress');
 
         //Verbose Mode
         $aCommand[] = (($this->bVerbose) ? 'verbose' : '');
