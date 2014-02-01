@@ -339,7 +339,7 @@ class Pdftk
 
         //Assign each PDF a multi-char handle (pdftk-1.45)
         foreach ($this->aInputFiles as $iKey => $oFile) {
-            if ($oFile->getData() !== null) {
+            if ($oFile->getStreamData() !== null) {
                 $aCommand[] = "-";
                 $this->sInputData = $iKey;
             } else {
@@ -491,7 +491,7 @@ class Pdftk
      */
     public function _renderPdf()
     {
-        $sData = ((!is_null($this->sInputData) ? $this->aInputFiles[$this->sInputData]->getData() : null));
+        $sData = ((!is_null($this->sInputData) ? $this->aInputFiles[$this->sInputData]->getStreamData() : null));
 
         $sContent = $this->_exec($this->_getCommand(), $sData);
 
@@ -505,7 +505,7 @@ class Pdftk
                 'PDF-TK did not return any data: ' .
                 $this->_getCommand() .
                 ' ' .
-                $this->aInputFiles[$this->sInputData]->getData()
+                $this->aInputFiles[$this->sInputData]->getStreamData()
             );
         }
 
