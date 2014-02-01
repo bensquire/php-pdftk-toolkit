@@ -365,7 +365,7 @@ class pdftk
         $aCommand[] = 'cat';
 
         //Fetch command for each input file
-        if ($total_inputs > 1) {
+        if ($total_inputs > 0) {
             foreach ($this->aInputFiles as $iKey => $oFile) {
                 if ($this->getPdftkVersion() >= 1.45) {
                     $handle = chr(65 + floor($iKey / 26) % 26) . chr(65 + $iKey % 26);
