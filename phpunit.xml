@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" verbose="true" bootstrap="./tests/Bootstrap.php">
+    <testsuites>
+        <testsuite name="PHPPdfTk Tests">
+            <directory suffix="Test.php" phpVersion="5.3.0" phpVersionOperator=">=">tests/Pdftk</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-html" target="./build/testing/phpunit/" title="MMTDigital/Admin" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="90"/>
+        <log type="testdox-html" target="./build/testing/phpunit-testdox.html" />
+        <log type="coverage-text" target="php://stdout" title="bensquire/php-pdftk-toolkit" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="90"/>
+        <log type="coverage-clover" target="./build/testing/logs/clover.xml"/>
+        <log type="junit" target="./build/testing/logs/junit.xml" logIncompleteSkipped="false"/>
+    </logging>
+</phpunit>

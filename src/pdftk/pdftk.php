@@ -32,7 +32,7 @@ use Pdftk\File\Input;
  */
 class Pdftk
 {
-    const VERSION = '1.1';
+    const VERSION = '1.2';
 
     protected $sBinary = '/usr/local/bin/pdftk';
     protected $aInputFiles = null;
