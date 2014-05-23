@@ -1,6 +1,10 @@
 <?php
 namespace Pdftk\File;
 
+/**
+ * Class Input
+ * @package Pdftk\File
+ */
 class Input
 {
     protected $aRotations = array(0 => 'north', 90 => 'east', 180 => 'south', 270 => 'west');
