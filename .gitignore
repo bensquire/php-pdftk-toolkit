@@ -2,3 +2,5 @@ nbproject/
 .svn
 .idea
 *.iml
+build/
+vendor/
