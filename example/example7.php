@@ -1,11 +1,13 @@
 <?php
-include('../pdftk/pdftk.php');
+include('../vendor/autoload.php');
+
+use Pdftk\Pdftk;
 $sPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'pdfs' . DIRECTORY_SEPARATOR;
 $pages = 2;
 
 for($x = 1; $x <= $pages; $x++)
 {
-    $oPDFTk = new pdftk();
+    $oPDFTk = new Pdftk();
     $oPDFTk ->setInputFile(array("filename" => $sPath . 'example.pdf', 'start_page' => $x, "end_page" => $x))
             ->setUserPassword("userpassword")
             ->setOwnerPassword("ownerpassword")
