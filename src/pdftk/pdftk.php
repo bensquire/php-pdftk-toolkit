@@ -6,7 +6,7 @@ use Pdftk\File\Input;
  * @license Apache 2.0
  *
  * @package PDFTK-PHP-Library
- * @version 1.1
+ * @version 1.2
  *
  * @abstract This class allows you to integrate with PDFTK command line from within
  * your PHP application (An application for PDF: merging, encrypting, rotating, watermarking,
