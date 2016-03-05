@@ -138,7 +138,7 @@ class Pdftk
      */
     public function getPdftkVersion()
     {
-        return $this->_exec($this->sBinary . ' --version | grep ^pdftk | cut -d " " -f2');
+        return $this->exec($this->sBinary . ' --version | grep ^pdftk | cut -d " " -f2');
     }
 
     /**
@@ -491,7 +491,7 @@ class Pdftk
     {
         $sData = ((!is_null($this->sInputData) ? $this->aInputFiles[$this->sInputData]->getStreamData() : null));
 
-        $sContent = $this->_exec($this->getCommand(), $sData);
+        $sContent = $this->exec($this->getCommand(), $sData);
 
         if (strlen($sContent['stderr']) > 0) {
             throw new \Exception('System error: ' . $sContent['stderr']);
@@ -523,7 +523,7 @@ class Pdftk
      *
      * @return array
      */
-    protected function _exec($sCommand, $sInput = null)
+    protected function exec($sCommand, $sInput = null)
     {
         //http://stackoverflow.com/questions/334879/how-do-i-get-the-application-exit-code-from-a-windows-command-line
 
