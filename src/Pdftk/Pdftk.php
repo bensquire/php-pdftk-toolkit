@@ -436,7 +436,7 @@ class Pdftk
         $filename = $this->sOutputFilename;
         $this->sOutputFilename = null;
 
-        $pdfData = $this->_renderPdf();
+        $pdfData = $this->renderPdf();
         header('Content-type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         echo $pdfData;
@@ -465,7 +465,7 @@ class Pdftk
         $this->sOutputFilename = null;
         $sFilename = preg_replace('/[^a-z0-9_\-.]+/i', '_', str_replace('.pdf', '', strtolower($sFilename))) . '.pdf';
 
-        $pdfData = $this->_renderPdf();
+        $pdfData = $this->renderPdf();
 
         header('Content-type: application/pdf');
         header('Cache-Control: public, must-revalidate, max-age=0');
@@ -482,12 +482,12 @@ class Pdftk
 
     /**
      * Builds the final PDF
-     * @example    $foo->_renderPdf();
+     * @example    $foo->renderPdf();
      *
      * @throws \Exception
      * @return string
      */
-    public function _renderPdf()
+    public function renderPdf()
     {
         $sData = ((!is_null($this->sInputData) ? $this->aInputFiles[$this->sInputData]->getStreamData() : null));
 
