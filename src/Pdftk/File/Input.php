@@ -186,11 +186,11 @@ class Input
 
     /**
      * Returns command to be executed
-     * @example $foo->_getCatCommand();
+     * @example $foo->getCatCommand();
      *
      * @return string
      */
-    public function _getCatCommand()
+    public function getCatCommand()
     {
         if ($this->sOverride != null) {
             return $this->sOverride;

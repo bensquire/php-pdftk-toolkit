@@ -370,7 +370,6 @@ class Pdftk
             $aCommand[] = 'input_pw ' . implode(' ', $aPasswords);
         }
 
-        // TODO: PDFTK Capable of much more functionality, extend here.
         $aCommand[] = 'cat';
 
         //Fetch command for each input file
@@ -381,7 +380,7 @@ class Pdftk
                 } else {
                     $handle = chr(65 + $iKey);
                 }
-                $aCommand[] = $handle . $oFile->_getCatCommand();
+                $aCommand[] = $handle . $oFile->getCatCommand();
             }
         }
 
