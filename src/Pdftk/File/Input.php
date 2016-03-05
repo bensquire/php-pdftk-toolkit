@@ -192,7 +192,7 @@ class Input
      */
     public function getCatCommand()
     {
-        if ($this->sOverride != null) {
+        if ($this->sOverride !== null) {
             return $this->sOverride;
         }
 

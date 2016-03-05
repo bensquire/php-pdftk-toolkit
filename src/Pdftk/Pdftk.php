@@ -330,7 +330,7 @@ class Pdftk
      *
      * @return string
      */
-    public function _getCommand()
+    public function getCommand()
     {
         $aCommand = array();
         $aCommand[] = $this->sBinary;
@@ -398,7 +398,6 @@ class Pdftk
             //Set Encryption Level
             $aCommand[] = 'encrypt_' . $this->iEncryption . 'bit';
 
-            //TODO: Sets permissions
             //pdftk mydoc.pdf output mydoc.128.pdf owner_pw foo user_pw baz allow printing
             //Printing, DegradedPrinting, ModifyContents, Assembly, CopyContents,
             //ScreenReaders, ModifyAnnotations, FillIn, AllFeatures
@@ -492,7 +491,7 @@ class Pdftk
     {
         $sData = ((!is_null($this->sInputData) ? $this->aInputFiles[$this->sInputData]->getStreamData() : null));
 
-        $sContent = $this->_exec($this->_getCommand(), $sData);
+        $sContent = $this->_exec($this->getCommand(), $sData);
 
         if (strlen($sContent['stderr']) > 0) {
             throw new \Exception('System error: ' . $sContent['stderr']);
@@ -502,7 +501,7 @@ class Pdftk
         if (is_null($this->sOutputFilename) && mb_strlen($sContent['stdout'], 'utf-8') === 0) {
             throw new \Exception(
                 'PDF-TK did not return any data: ' .
-                $this->_getCommand() .
+                $this->getCommand() .
                 ' ' .
                 $this->aInputFiles[$this->sInputData]->getStreamData()
             );
@@ -526,7 +525,6 @@ class Pdftk
      */
     protected function _exec($sCommand, $sInput = null)
     {
-        //TODO: Better handling of error codes
         //http://stackoverflow.com/questions/334879/how-do-i-get-the-application-exit-code-from-a-windows-command-line
 
         $aResult = array('stdout' => '', 'stderr' => '', 'return' => '');
@@ -564,6 +562,6 @@ class Pdftk
      */
     public function __toString()
     {
-        return $this->_getCommand();
+        return $this->getCommand();
     }
 }
